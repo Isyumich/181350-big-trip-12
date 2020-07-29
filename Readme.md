@@ -1,7 +1,7 @@
 # Личный проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
 * Студент: [Андрей Изюмов](https://up.htmlacademy.ru/ecmascript/12/user/181350).
-* Наставник: `Неизвестно`.
+* Наставник: [Яна Казанина](https://htmlacademy.ru/profile/id1275245).
 
 ---
 
