@@ -144,8 +144,8 @@ const createTripEventsItemTemplate = () => {
     </li>`
   );
 };
-
-const createnewEventItemTemplate = () => {
+/*
+const createNewEventItemTemplate = () => {
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
       <header class="event__header">
@@ -348,7 +348,7 @@ const createNoPointsMessageTemplate = () => {
     </p>`
   );
 };
-
+*/
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
