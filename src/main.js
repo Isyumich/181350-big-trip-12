@@ -6,7 +6,15 @@ import {createTripDaysListTemplate} from "./view/trip-days-list.js";
 import {createTripDaysItemTemplate} from "./view/trip-days-item.js";
 import {createTripEventsListTemplate} from "./view/trip-events-list.js";
 import {createTripEventsItemTemplate} from "./view/trip-events-item.js";
+import {createNewEventItemTemplate} from "./view/new-event-item.js";
 import {render} from "./view/util";
+import {generateTrip} from "./mock/trip.js";
+
+const trips = [];
+
+for (let i = 0; i <= 15; i++) {
+  trips.push(generateTrip());
+}
 
 const ELEMENT_COUNT = 3;
 
@@ -39,6 +47,8 @@ for (let item of tripDaysItems) {
 const tripEventsLists = tripDaysList.querySelectorAll(`.trip-events__list`);
 for (let list of tripEventsLists) {
   for (let j = 0; j < ELEMENT_COUNT; j++) {
-    render(list, createTripEventsItemTemplate(), `beforeend`);
+    render(list, createTripEventsItemTemplate(trips[0]), `beforeend`);
   }
 }
+
+render(tripDaysList, createNewEventItemTemplate(), `afterbegin`);
