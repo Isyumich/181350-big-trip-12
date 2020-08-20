@@ -9,3 +9,11 @@ export const getRandomArrayElement = function (sourceArray) {
   const index = getRandomInteger(0, sourceArray.length - 1);
   return sourceArray[index];
 };
+
+export const convertTime = (time) => {
+  if (time < 10) {
+    time = `0` + time;
+  }
+  return time;
+};
+

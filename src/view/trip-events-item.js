@@ -1,47 +1,47 @@
-export const createTripEventsItemTemplate = (trip) => {
-  const {typeRoutPoint, city, price, startTime, finishTime, offers} = trip;
+import {convertTime} from "../util.js";
+
+const getDiffTime = (startTime, finishTime) => {
   const MINUTE_IN_DAY = 1440;
   const MINUTE_IN_HOUR = 60;
 
-  const convertTime = (time) => {
-    if (time < 10) {
-      time = `0` + time;
-    }
-    return time;
-  };
+  const diffMinute = Math.abs((finishTime.getTime() - startTime.getTime())) / 1000 / 60;
+  const dayCount = Math.floor(diffMinute / MINUTE_IN_DAY);
+  const dayCountRemains = diffMinute % MINUTE_IN_DAY;
+  const hourCount = Math.floor(dayCountRemains / MINUTE_IN_HOUR);
+  const minuteCount = dayCountRemains % MINUTE_IN_HOUR;
 
-  const getDiffTime = () => {
-    const diffMinute = Math.abs((finishTime.getTime() - startTime.getTime()) / 1000 / 60);
-    const dayCount = Math.floor(diffMinute / MINUTE_IN_DAY);
-    const dayCountRemains = diffMinute % MINUTE_IN_DAY;
-    const hourCount = Math.floor(dayCountRemains / MINUTE_IN_HOUR);
-    const hourCountRemains = dayCountRemains % MINUTE_IN_HOUR;
-    const minuteCount = hourCountRemains;
+  let diffDate;
+  if (dayCount > 1) {
+    diffDate = convertTime(dayCount) + `D ` + convertTime(hourCount) + `H ` + convertTime(minuteCount) + `M `;
+  } else if (hourCount > 1) {
+    diffDate = convertTime(hourCount) + `H ` + convertTime(minuteCount) + `M `;
+  } else {
+    diffDate = convertTime(minuteCount) + `M `;
+  }
+  return diffDate;
+};
 
-    let diffDate;
-    if (dayCount > 1) {
-      diffDate = convertTime(dayCount) + `D ` + convertTime(hourCount) + `H ` + convertTime(minuteCount) + `M `;
-    } else if (hourCount > 1) {
-      diffDate = convertTime(hourCount) + `H ` + convertTime(minuteCount) + `M `;
-    } else {
-      diffDate = convertTime(minuteCount) + `M `;
-    }
-    return diffDate;
-  };
+export const createTripEventsItemTemplate = (trip) => {
+  const {typeRoutPoint, city, price, startTime, finishTime, offers} = trip;
 
-  const diffDate = getDiffTime();
-  const startYear = startTime.getFullYear();
-  const startMonth = convertTime(startTime.getMonth() + 1);
-  const startDay = convertTime(startTime.getDate());
   const startHour = convertTime(startTime.getHours());
   const startMinute = convertTime(startTime.getMinutes());
-  const finishYear = startTime.getFullYear();
-  const finishMonth = convertTime(startTime.getMonth() + 1);
-  const finishDay = convertTime(startTime.getDate());
   const finishHour = convertTime(finishTime.getHours());
   const finishMinute = convertTime(finishTime.getMinutes());
-  const nameOffer = offers[0].name;
-  const priceOffer = offers[0].price;
+  let offersName;
+  let offersPrice;
+
+  if (offers === null) {
+    offersName = ``;
+  } else {
+    offersName = offers[0].name;
+  }
+
+  if (offers === null) {
+    offersPrice = ``;
+  } else {
+    offersPrice = offers[0].price;
+  }
 
   return (
     `<li class="trip-events__item">
@@ -53,11 +53,13 @@ export const createTripEventsItemTemplate = (trip) => {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${startYear}-${startMonth}-${startDay}T${startHour}:${startMinute}">${startHour}:${startMinute}</time>
+            <time class="event__start-time" datetime="${startTime.getFullYear()}-${convertTime(startTime.getMonth() + 1)}
+            -${convertTime(startTime.getDate())}T${startHour}:${startMinute}">${startHour}:${startMinute}</time>
               &mdash;
-            <time class="event__end-time" datetime="${finishYear}-${finishMonth}-${finishDay}T${finishHour}:${finishMinute}">${finishHour}:${finishMinute}</time>
+            <time class="event__end-time" datetime="${startTime.getFullYear()}-${convertTime(startTime.getMonth() + 1)}
+            -${convertTime(startTime.getDate())}T${finishHour}:${finishMinute}">${finishHour}:${finishMinute}</time>
           </p>
-          <p class="event__duration">${diffDate}</p>
+          <p class="event__duration">${getDiffTime(startTime, finishTime)}</p>
         </div>
 
         <p class="event__price">
@@ -67,9 +69,9 @@ export const createTripEventsItemTemplate = (trip) => {
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
           <li class="event__offer">
-            <span class="event__offer-title">${nameOffer}</span>
+            <span class="event__offer-title">${offersName}</span>
             &plus;
-            &euro;&nbsp;<span class="event__offer-price">${priceOffer}</span>
+            &euro;&nbsp;<span class="event__offer-price">${offersPrice}</span>
           </li>
         </ul>
 

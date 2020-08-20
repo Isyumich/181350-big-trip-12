@@ -1,6 +1,42 @@
+import {convertTime} from "../util.js";
 
+const convertYear = (year) => {
+  return String(year).slice(2, 4);
+};
 
-export const createNewEventItemTemplate = () => {
+const getCity = (city) => {
+  if (city === null) {
+    city = ``;
+  }
+  return city;
+};
+
+const getTypePoint = (point) => {
+  if (point === null) {
+    point = ``;
+  }
+  return point;
+};
+
+const getTime = (time) => {
+  if (time === null) {
+    return `18/03/19 00:00`;
+  } else {
+    return convertTime(time.getDate()) + `/` + convertTime(time.getMonth()) + `/` + convertYear(time.getFullYear())
+    + ` ` + convertTime(time.getHours()) + `:` + convertTime(time.getMinutes());
+  }
+};
+
+const getPrice = (price) => {
+  if (price === null) {
+    price = ``;
+  }
+  return price;
+};
+
+export const createNewEventItemTemplate = (trip) => {
+  const {typeRoutPoint, city, price, startTime, finishTime} = trip;
+
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
       <header class="event__header">
@@ -74,7 +110,7 @@ export const createNewEventItemTemplate = () => {
 
         <div class="event__field-group  event__field-group--destination">
           <label class="event__label  event__type-output" for="event-destination-1">
-            Bus to
+            ${getTypePoint(typeRoutPoint)} to ${getCity(city)}
           </label>
           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="" list="destination-list-1">
           <datalist id="destination-list-1">
@@ -89,12 +125,12 @@ export const createNewEventItemTemplate = () => {
           <label class="visually-hidden" for="event-start-time-1">
             From
           </label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="18/03/19 00:00">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${getTime(startTime)}">
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">
             To
           </label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="18/03/19 00:00">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${getTime(finishTime)}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -102,7 +138,7 @@ export const createNewEventItemTemplate = () => {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
+          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${getPrice(price)}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>

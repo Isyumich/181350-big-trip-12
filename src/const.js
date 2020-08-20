@@ -1,4 +1,4 @@
-export const ROUT_POINT = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check`, `Sightseeing`, `Restaurant`];
+export const ROUT_POINT = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
 export const CITIES = [`Yaroslavl`, `Saint-Petersburg`, `Moscow`, `Kazan`, `Krasnodar`, `Sochi`, `Adler`];
 export const DESCRIPTIONS = [`Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
   `Cras aliquet varius magna, non porta ligula feugiat eget.`,
@@ -13,3 +13,4 @@ export const DESCRIPTIONS = [`Lorem ipsum dolor sit amet, consectetur adipiscing
 export const OFFERS = [`car`, `luggage`, `uber`, `food`, `gid`, `conditioner`];
 export const MAX_OFFERS_COUNT = 5;
 export const OFFERS_PRICE = [20, 40, 60, 80, 100, 120];
+export const YEAR_MONTHS = [`JANUARY`, `FEBRUARY`, `MARCH`, `APRIL`, `MAY`, `JUNE`, `JULY`, `AUGUST`, `SEPTEMBER`, `OCTOBER`, `NOVEMBER`, `DECEMBER`];
