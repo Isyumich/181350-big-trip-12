@@ -20,7 +20,7 @@ const getTypePoint = (point) => {
 
 const getTime = (time) => {
   if (time === null) {
-    return `18/03/19 00:00`;
+    return ``;
   } else {
     return convertTime(time.getDate()) + `/` + convertTime(time.getMonth()) + `/` + convertYear(time.getFullYear())
     + ` ` + convertTime(time.getHours()) + `:` + convertTime(time.getMinutes());

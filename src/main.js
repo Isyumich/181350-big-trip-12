@@ -9,23 +9,8 @@ import {createNewEventItemTemplate} from "./view/new-event-item.js";
 import {render} from "./view/util";
 import {generateTrip} from "./mock/trip.js";
 import {convertTime} from "./util";
+import {getAscendingSortedArray} from "./util.js";
 
-
-const getAscSortedArray = function (array) {
-  for (let i = 0; i < array.length - 1; i++) {
-    let minElement = array[i];
-
-    for (let j = i + 1; j < array.length; j++) {
-      if (array[j].startTime < minElement.startTime) {
-        minElement = array[j];
-        const swap = array[i];
-        array[i] = minElement;
-        array[j] = swap;
-      }
-    }
-  }
-  return array;
-};
 
 const ELEMENT_COUNT = 15;
 
@@ -35,7 +20,7 @@ for (let i = 0; i <= ELEMENT_COUNT; i++) {
   trips.push(generateTrip());
 }
 
-const sortedTrips = getAscSortedArray(trips);
+const sortedTrips = getAscendingSortedArray(trips);
 
 const pageHeaderContainer = document.querySelector(`.page-header__container`);
 const tripMainContainer = pageHeaderContainer.querySelector(`.trip-main`);

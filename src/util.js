@@ -17,3 +17,19 @@ export const convertTime = (time) => {
   return time;
 };
 
+export const getAscendingSortedArray = function (array) {
+  let sortedArray = array;
+  for (let i = 0; i < sortedArray.length - 1; i++) {
+    let minElement = sortedArray[i];
+
+    for (let j = i + 1; j < sortedArray.length; j++) {
+      if (sortedArray[j].startTime < minElement.startTime) {
+        minElement = sortedArray[j];
+        const swap = sortedArray[i];
+        sortedArray[i] = minElement;
+        sortedArray[j] = swap;
+      }
+    }
+  }
+  return sortedArray;
+};

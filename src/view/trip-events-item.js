@@ -21,27 +21,20 @@ const getDiffTime = (startTime, finishTime) => {
   return diffDate;
 };
 
+const getRandomDate = (date) => {
+  return date.getFullYear() + `-` + convertTime(date.getMonth() + 1) + `-` + convertTime(date.getDate()) +
+    `T` + convertTime(date.getHours()) + `:` + convertTime(date.getMinutes());
+};
+
+const getRandomTime = (date) => {
+  return convertTime(date.getHours()) + `:` + convertTime(date.getMinutes());
+};
+
 export const createTripEventsItemTemplate = (trip) => {
   const {typeRoutPoint, city, price, startTime, finishTime, offers} = trip;
 
-  const startHour = convertTime(startTime.getHours());
-  const startMinute = convertTime(startTime.getMinutes());
-  const finishHour = convertTime(finishTime.getHours());
-  const finishMinute = convertTime(finishTime.getMinutes());
-  let offersName;
-  let offersPrice;
-
-  if (offers === null) {
-    offersName = ``;
-  } else {
-    offersName = offers[0].name;
-  }
-
-  if (offers === null) {
-    offersPrice = ``;
-  } else {
-    offersPrice = offers[0].price;
-  }
+  let offersName = offers === null ? `` : offers[0].name;
+  let offersPrice = offers === null ? `` : offers[0].price;
 
   return (
     `<li class="trip-events__item">
@@ -53,11 +46,9 @@ export const createTripEventsItemTemplate = (trip) => {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${startTime.getFullYear()}-${convertTime(startTime.getMonth() + 1)}
-            -${convertTime(startTime.getDate())}T${startHour}:${startMinute}">${startHour}:${startMinute}</time>
+            <time class="event__start-time" datetime="${getRandomDate(startTime)}">${getRandomTime(startTime)}</time>
               &mdash;
-            <time class="event__end-time" datetime="${startTime.getFullYear()}-${convertTime(startTime.getMonth() + 1)}
-            -${convertTime(startTime.getDate())}T${finishHour}:${finishMinute}">${finishHour}:${finishMinute}</time>
+            <time class="event__end-time" datetime="${getRandomDate(finishTime)}">${getRandomTime(finishTime)}</time>
           </p>
           <p class="event__duration">${getDiffTime(startTime, finishTime)}</p>
         </div>
