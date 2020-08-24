@@ -6,7 +6,7 @@ import {createTripDaysListTemplate} from "./view/trip-days-list.js";
 import {createTripDaysItemTemplate} from "./view/trip-days-item.js";
 import {createTripEventsItemTemplate} from "./view/trip-events-item.js";
 import {createNewEventItemTemplate} from "./view/new-event-item.js";
-import {render} from "./view/util";
+import {render} from "./util";
 import {generateTrip} from "./mock/trip.js";
 import {convertTime} from "./util";
 import {getAscendingSortedArray} from "./util.js";

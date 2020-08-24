@@ -33,3 +33,7 @@ export const getAscendingSortedArray = function (array) {
   }
   return sortedArray;
 };
+
+export const render = (container, template, place) => {
+  container.insertAdjacentHTML(place, template);
+};
