@@ -1,4 +1,4 @@
-import {convertTime} from "../util.js";
+import {convertTime, createElement} from "../util.js";
 
 const getDiffTime = (startTime, finishTime) => {
   const MINUTE_IN_DAY = 1440;
@@ -10,15 +10,13 @@ const getDiffTime = (startTime, finishTime) => {
   const hourCount = Math.floor(dayCountRemains / MINUTE_IN_HOUR);
   const minuteCount = dayCountRemains % MINUTE_IN_HOUR;
 
-  let diffDate;
-  if (dayCount > 1) {
-    diffDate = convertTime(dayCount) + `D ` + convertTime(hourCount) + `H ` + convertTime(minuteCount) + `M `;
-  } else if (hourCount > 1) {
-    diffDate = convertTime(hourCount) + `H ` + convertTime(minuteCount) + `M `;
-  } else {
-    diffDate = convertTime(minuteCount) + `M `;
-  }
-  return diffDate;
+  return `${
+    dayCount > 1 ? `${convertTime(dayCount)}D ` : ``
+  } ${
+    hourCount > 1 ? `${convertTime(minuteCount)}H ` : ``
+  } ${
+    minuteCount > 1 ? `${convertTime(minuteCount)}M` : ``
+  }`;
 };
 
 const getRandomDate = (date) => {
@@ -73,3 +71,26 @@ export const createTripEventsItemTemplate = (trip) => {
     </li>`
   );
 };
+
+export default class TripEventsItem {
+  constructor(trip) {
+    this._trip = trip;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripEventsItemTemplate(this._trip);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

@@ -1,4 +1,4 @@
-import {convertTime} from "../util.js";
+import {convertTime, createElement} from "../util.js";
 import {YEAR_MONTHS} from "../const.js";
 
 const getMonth = (time, months) => {
@@ -25,7 +25,7 @@ export const createTripDaysItemTemplate = (number, trip, daysContainers) => {
     if (counter === 0) {
       daysItemTemplate = `<li class="trip-days__item  day">
       <div class="day__info">
-        <span class="day__counter">${number}</span>
+        <span class="day__counter">${number + 1}</span>
         <time class="day__date" datetime="${startDateTime}">${getMonth(startTime, YEAR_MONTHS)} ${startTime.getDate()}</time>
       </div>
       <ul class="trip-events__list">
@@ -35,3 +35,28 @@ export const createTripDaysItemTemplate = (number, trip, daysContainers) => {
   }
   return (daysItemTemplate);
 };
+
+export default class TripDaysItem {
+  constructor(number, trip, daysContainers) {
+    this._number = number;
+    this._trip = trip;
+    this._daysContainers = daysContainers;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripDaysItemTemplate(this._number, this._trip, this._daysContainers);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
