@@ -32,8 +32,17 @@ const renderTrip = (tripListElement, trip) => {
     tripListElement.replaceChild(item.getElement(), editItem.getElement());
   };
 
+  const onEscKeyDown = (evt) => {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      evt.preventDefault();
+      replaceFormToTrip();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
+  };
+
   item.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
     replaceTripToForm();
+    document.addEventListener(`keydown`, onEscKeyDown);
   });
 
   editItem.getElement().addEventListener(`submit`, (evt) => {
