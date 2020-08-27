@@ -1,38 +1,17 @@
-import {convertTime} from "../util.js";
+import {convertTime, createElement} from "../util.js";
 
 const convertYear = (year) => {
   return String(year).slice(2, 4);
 };
 
-const getCity = (city) => {
-  if (city === null) {
-    city = ``;
-  }
-  return city;
-};
+const getCity = (city) => city === null ? `` : city;
 
-const getTypePoint = (point) => {
-  if (point === null) {
-    point = ``;
-  }
-  return point;
-};
+const getTypePoint = (point) => point === null ? `` : point;
 
-const getTime = (time) => {
-  if (time === null) {
-    return ``;
-  } else {
-    return convertTime(time.getDate()) + `/` + convertTime(time.getMonth()) + `/` + convertYear(time.getFullYear())
-    + ` ` + convertTime(time.getHours()) + `:` + convertTime(time.getMinutes());
-  }
-};
+const getTime = (time) => time === null ? `` : convertTime(time.getDate()) + `/` + convertTime(time.getMonth()) + `/` + convertYear(time.getFullYear())
+  + ` ` + convertTime(time.getHours()) + `:` + convertTime(time.getMinutes());
 
-const getPrice = (price) => {
-  if (price === null) {
-    price = ``;
-  }
-  return price;
-};
+const getPrice = (price) => price === null ? `` : price;
 
 export const createNewEventItemTemplate = (trip) => {
   const {typeRoutPoint, city, price, startTime, finishTime} = trip;
@@ -147,3 +126,26 @@ export const createNewEventItemTemplate = (trip) => {
     </form>`
   );
 };
+
+export default class NewEventItem {
+  constructor(trip) {
+    this._trip = trip;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createNewEventItemTemplate(this._trip);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

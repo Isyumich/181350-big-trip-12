@@ -1,15 +1,13 @@
-import {createRoutTemplate} from "./view/rout.js";
-import {createControlsTemplate} from "./view/control.js";
-import {createFilterTemplate} from "./view/filter.js";
-import {createSortingTemplate} from "./view/sorting.js";
-import {createTripDaysListTemplate} from "./view/trip-days-list.js";
-import {createTripDaysItemTemplate} from "./view/trip-days-item.js";
-import {createTripEventsItemTemplate} from "./view/trip-events-item.js";
-import {createNewEventItemTemplate} from "./view/new-event-item.js";
-import {render} from "./view/util";
+import RoutView from "./view/rout.js";
+import ControlView from "./view/control.js";
+import FilterView from "./view/filter.js";
+import SortingView from "./view/sorting.js";
+import TripDaysListView from "./view/trip-days-list.js";
+import TripDaysItemView from "./view/trip-days-item.js";
+import TripEventsItemView from "./view/trip-events-item.js";
+import NewEventItemView from "./view/new-event-item.js";
 import {generateTrip} from "./mock/trip.js";
-import {convertTime} from "./util";
-import {getAscendingSortedArray} from "./util.js";
+import {getAscendingSortedArray, render, convertTime, RenderPosition} from "./util.js";
 
 
 const ELEMENT_COUNT = 15;
@@ -22,43 +20,67 @@ for (let i = 0; i <= ELEMENT_COUNT; i++) {
 
 const sortedTrips = getAscendingSortedArray(trips);
 
+const renderTrip = (tripListElement, trip) => {
+  const editItem = new NewEventItemView(trip);
+  const item = new TripEventsItemView(trip);
+
+  const replaceTripToForm = () => {
+    tripListElement.replaceChild(editItem.getElement(), item.getElement());
+  };
+
+  const replaceFormToTrip = () => {
+    tripListElement.replaceChild(item.getElement(), editItem.getElement());
+  };
+
+  item.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
+    replaceTripToForm();
+  });
+
+  editItem.getElement().addEventListener(`submit`, (evt) => {
+    evt.preventDefault();
+    replaceFormToTrip();
+  });
+
+  render(tripListElement, item.getElement(), RenderPosition.BEFOREEND);
+};
+
 const pageHeaderContainer = document.querySelector(`.page-header__container`);
 const tripMainContainer = pageHeaderContainer.querySelector(`.trip-main`);
 const tripControlElement = pageHeaderContainer.querySelector(`.trip-controls`);
 const switchFirstHeader = tripControlElement.querySelector(`h2`);
 
-render(tripMainContainer, createRoutTemplate(), `afterbegin`);
-render(switchFirstHeader, createControlsTemplate(), `afterend`);
-render(tripControlElement, createFilterTemplate(), `beforeend`);
+render(tripMainContainer, new RoutView().getElement(), RenderPosition.AFTERBEGIN);
+render(switchFirstHeader, new ControlView().getElement(), RenderPosition.AFTEREND);
+render(tripControlElement, new FilterView().getElement(), RenderPosition.BEFOREEND);
 
 const pageMainContainer = document.querySelector(`.page-main`);
 const tripEventsSection = pageMainContainer.querySelector(`.trip-events`);
 const tripEventsHeader = tripEventsSection.querySelector(`h2`);
 
-render(tripEventsHeader, createSortingTemplate(), `afterend`);
-render(tripEventsSection, createTripDaysListTemplate(), `beforeend`);
+const tripDaysListNew = new TripDaysListView();
 
-const tripDaysList = tripEventsSection.querySelector(`.trip-days`);
+render(tripEventsHeader, new SortingView().getElement(), RenderPosition.AFTEREND);
+render(tripEventsSection, tripDaysListNew.getElement(), RenderPosition.BEFOREEND);
 
-render(tripDaysList, createNewEventItemTemplate(sortedTrips[0]), `afterbegin`);
+// renderElement(tripDaysList, new NewEventItemView(sortedTrips[0]).getElement(), RenderPosition.AFTERBEGIN);
 
-for (let i = 1; i < ELEMENT_COUNT; i++) {
-  const tripDaysContainersTime = tripDaysList.querySelectorAll(`.day__date`);
-  render(tripDaysList, createTripDaysItemTemplate(i, sortedTrips[i], tripDaysContainersTime), `beforeend`);
+for (let i = 0; i < ELEMENT_COUNT; i++) {
+  const tripDaysContainersTime = tripEventsSection.querySelectorAll(`.day__date`);
+  render(tripDaysListNew.getElement(), new TripDaysItemView(i, sortedTrips[i], tripDaysContainersTime).getElement(), RenderPosition.BEFOREEND);
 }
 
-const tripDaysContainers = tripDaysList.querySelectorAll(`.trip-days__item`);
+const tripDaysContainers = tripEventsSection.querySelectorAll(`.trip-days__item`);
 
-for (let j = 1; j < ELEMENT_COUNT; j++) {
+for (let j = 0; j < ELEMENT_COUNT; j++) {
   for (let container of tripDaysContainers) {
     const timeContainer = container.querySelector(`.day__date`);
     const tripEventList = container.querySelector(`.trip-events__list`);
     const date = sortedTrips[j].startTime.getFullYear() + `-` + convertTime(sortedTrips[j].startTime.getMonth())
       + `-` + convertTime(sortedTrips[j].startTime.getDate());
     if (timeContainer.dateTime === date) {
-      render(tripEventList, createTripEventsItemTemplate(sortedTrips[j]), `beforeend`);
+      renderTrip(tripEventList, sortedTrips[j]);
+      // render(tripEventList, new TripEventsItemView(sortedTrips[j]).getElement(), RenderPosition.BEFOREEND);
     }
   }
 }
-
 

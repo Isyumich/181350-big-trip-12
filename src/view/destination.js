@@ -1,3 +1,5 @@
+import {createElement} from "../util.js";
+
 export const createDestinationTemplate = () => {
   return (
     `<section class="event__section  event__section--destination">
@@ -16,3 +18,25 @@ export const createDestinationTemplate = () => {
     </section>`
   );
 };
+
+export default class Destination {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createDestinationTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
