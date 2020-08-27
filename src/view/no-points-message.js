@@ -1,10 +1,8 @@
-import {createElement} from "../util";
+import {createElement} from "../utils";
 
 export const createNoPointsMessageTemplate = () => {
   return (
-    `<p class="trip-info__cost">
-      Total: &euro;&nbsp;<span class="trip-info__cost-value">0</span>
-    </p>`
+    `<p class="trip-events__msg">Click New Event to create your first point</p>`
   );
 };
 

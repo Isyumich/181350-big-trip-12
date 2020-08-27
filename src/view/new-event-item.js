@@ -1,4 +1,4 @@
-import {convertTime, createElement} from "../util.js";
+import {convertTime, createElement} from "../utils.js";
 
 const convertYear = (year) => {
   return String(year).slice(2, 4);
@@ -8,8 +8,12 @@ const getCity = (city) => city === null ? `` : city;
 
 const getTypePoint = (point) => point === null ? `` : point;
 
-const getTime = (time) => time === null ? `` : convertTime(time.getDate()) + `/` + convertTime(time.getMonth()) + `/` + convertYear(time.getFullYear())
+const getFormatTime = (time) => {
+  return convertTime(time.getDate()) + `/` + convertTime(time.getMonth()) + `/` + convertYear(time.getFullYear())
   + ` ` + convertTime(time.getHours()) + `:` + convertTime(time.getMinutes());
+};
+
+const getTime = (time) => time === null ? `` : getFormatTime(time);
 
 const getPrice = (price) => price === null ? `` : price;
 

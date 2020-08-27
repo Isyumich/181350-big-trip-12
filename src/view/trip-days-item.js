@@ -1,4 +1,4 @@
-import {convertTime, createElement} from "../util.js";
+import {convertTime, createElement} from "../utils.js";
 import {YEAR_MONTHS} from "../const.js";
 
 const getMonth = (time, months) => {

@@ -1,4 +1,4 @@
-import {createElement} from "../util";
+import {createElement} from "../utils";
 
 export const createTripDaysListTemplate = () => {
   return (
