@@ -1,4 +1,4 @@
-import {convertTime, createElement} from "../util.js";
+import {convertTime, createElement} from "../utils.js";
 
 const getDiffTime = (startTime, finishTime) => {
   const MINUTE_IN_DAY = 1440;

@@ -1,4 +1,4 @@
-import {createElement} from "../util";
+import {createElement} from "../utils";
 
 export const createRoutTemplate = () => {
   return (
@@ -14,7 +14,7 @@ export const createRoutTemplate = () => {
   );
 };
 
-export default class Rout {
+export default class Route {
   constructor() {
     this._element = null;
   }

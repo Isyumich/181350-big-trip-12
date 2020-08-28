@@ -1,4 +1,4 @@
-import {createElement} from "../util.js";
+import {createElement} from "../utils.js";
 
 export const createControlsTemplate = () => {
   return (
@@ -9,7 +9,7 @@ export const createControlsTemplate = () => {
   );
 };
 
-export default class Control {
+export default class Menu {
   constructor() {
     this._element = null;
   }

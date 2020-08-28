@@ -1,5 +1,12 @@
-import {getRandomInteger, getRandomArrayElement} from "../util.js";
-import {OFFERS_PRICE, MAX_OFFERS_COUNT, OFFERS, CITIES, DESCRIPTIONS, ROUT_POINT} from "../const.js";
+import {getRandomInteger, getRandomArrayElement} from "../utils.js";
+import {
+  OFFERS_PRICE,
+  MAX_OFFERS_COUNT,
+  OFFERS,
+  CITIES,
+  DESCRIPTIONS,
+  ROUT_POINT,
+} from "../const.js";
 
 const generateOffers = (type) => {
   const offersList = [];
