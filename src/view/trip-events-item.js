@@ -1,4 +1,5 @@
-import {convertTime, createElement} from "../utils.js";
+import {convertTime} from "./utils/common.js";
+import AbstractView from "./abstract.js";
 
 const getDiffTime = (startTime, finishTime) => {
   const MINUTE_IN_DAY = 1440;
@@ -72,25 +73,25 @@ export const createTripEventsItemTemplate = (trip) => {
   );
 };
 
-export default class TripEventsItem {
+export default class TripEventsItem extends AbstractView {
   constructor(trip) {
+    super();
+
     this._trip = trip;
-    this._element = null;
+    this._clickHandler = this._clickHandler.bind(this);
   }
 
   getTemplate() {
     return createTripEventsItemTemplate(this._trip);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _clickHandler(evt) {
+    evt.preventDefault();
+    this._callback.click();
   }
 
-  removeElement() {
-    this._element = null;
+  setClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().addEventListener(`click`, this._clickHandler);
   }
 }

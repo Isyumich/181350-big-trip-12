@@ -1,4 +1,5 @@
-import {convertTime, createElement} from "../utils.js";
+import {convertTime} from "./utils/common.js";
+import AbstractView from "./abstract.js";
 
 const convertYear = (year) => {
   return String(year).slice(2, 4);
@@ -131,25 +132,25 @@ export const createNewEventItemTemplate = (trip) => {
   );
 };
 
-export default class NewEventItem {
+export default class NewEventItem extends AbstractView {
   constructor(trip) {
+    super();
+
     this._trip = trip;
-    this._element = null;
+    this._editClickHandler = this._editClickHandler.bind(this);
   }
 
   getTemplate() {
     return createNewEventItemTemplate(this._trip);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _editClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.editClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setEditClickHandler(callback) {
+    this._callback.editClick = callback;
+    this.getElement().addEventListener(`click`, this._editClickHandler);
   }
 }

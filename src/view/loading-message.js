@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
 
 export const createLoadingMessageTemplate = () => {
   return (
@@ -8,24 +8,8 @@ export const createLoadingMessageTemplate = () => {
   );
 };
 
-export default class LoadingMessage {
-  constructor() {
-    this._element = null;
-  }
-
+export default class LoadingMessage extends AbstractView {
   getTemplate() {
     return createLoadingMessageTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

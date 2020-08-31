@@ -1,5 +1,6 @@
-import {convertTime, createElement} from "../utils.js";
+import {convertTime} from "./utils/common.js";
 import {YEAR_MONTHS} from "../const.js";
+import AbstractView from "./abstract.js";
 
 const getMonth = (time, months) => {
   return months[time.getMonth()];
@@ -9,54 +10,30 @@ const getDateFormat = (time) => {
   return time.getFullYear() + `-` + convertTime(time.getMonth()) + `-` + convertTime(time.getDate());
 };
 
-export const createTripDaysItemTemplate = (number, trip, daysContainers) => {
+export const createTripDaysItemTemplate = (number, trip) => {
   const {startTime} = trip;
   const startDateTime = getDateFormat(startTime);
-  let daysItemTemplate = ``;
 
-  if (daysContainers !== null) {
-    const date = startTime.getFullYear() + `-` + convertTime(startTime.getMonth()) + `-` + convertTime(startTime.getDate());
-    let counter = 0;
-    for (let element of daysContainers) {
-      if (element.dateTime === date) {
-        counter++;
-      }
-    }
-    if (counter === 0) {
-      daysItemTemplate = `<li class="trip-days__item  day">
+  return (`<li class="trip-days__item  day">
       <div class="day__info">
         <span class="day__counter">${number + 1}</span>
         <time class="day__date" datetime="${startDateTime}">${getMonth(startTime, YEAR_MONTHS)} ${startTime.getDate()}</time>
       </div>
       <ul class="trip-events__list">
       </ul>
-    </li>`;
-    }
-  }
-  return (daysItemTemplate);
+    </li>`);
 };
 
-export default class TripDaysItem {
+
+export default class TripDaysItem extends AbstractView {
   constructor(number, trip, daysContainers) {
+    super();
     this._number = number;
     this._trip = trip;
     this._daysContainers = daysContainers;
-    this._element = null;
   }
 
   getTemplate() {
     return createTripDaysItemTemplate(this._number, this._trip, this._daysContainers);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

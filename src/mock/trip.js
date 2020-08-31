@@ -1,4 +1,4 @@
-import {getRandomInteger, getRandomArrayElement} from "../utils.js";
+import {getRandomInteger, getRandomArrayElement} from "../view/utils/common.js";
 import {
   OFFERS_PRICE,
   MAX_OFFERS_COUNT,
