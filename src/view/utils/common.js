@@ -10,13 +10,6 @@ export const getRandomArrayElement = function (sourceArray) {
   return sourceArray[index];
 };
 
-export const convertTime = (time) => {
-  if (time < 10) {
-    time = `0` + time;
-  }
-  return time;
-};
-
 export const getAscendingSortedArray = function (array) {
   let sortedArray = array;
   for (let i = 0; i < sortedArray.length - 1; i++) {
@@ -34,34 +27,9 @@ export const getAscendingSortedArray = function (array) {
   return sortedArray;
 };
 
-export const RenderPosition = {
-  AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`,
-  AFTEREND: `afterend`,
-  BEFOREBEGIN: `beforebegin`,
-};
-
-export const render = (container, element, place) => {
-  switch (place) {
-    case RenderPosition.AFTERBEGIN:
-      container.prepend(element);
-      break;
-    case RenderPosition.BEFOREEND:
-      container.append(element);
-      break;
-    case RenderPosition.AFTEREND:
-      container.after(element);
-      break;
-    case RenderPosition.BEFOREBEGIN:
-      container.before(element);
-      break;
+export const convertTime = (time) => {
+  if (time < 10) {
+    time = `0` + time;
   }
+  return time;
 };
-
-export const createElement = (template) => {
-  const newElement = document.createElement(`div`);
-  newElement.innerHTML = template;
-
-  return newElement.firstChild;
-};
-
