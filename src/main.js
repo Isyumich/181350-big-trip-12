@@ -1,8 +1,9 @@
+
 import RouteView from "./view/route.js";
 import MenuView from "./view/menu.js";
 import FilterView from "./view/filter.js";
 import {generateTrip} from "./mock/trip.js";
-import {getAscendingSortedArray} from "./view/utils/common.js";
+import {getDateAscendingSortedArray} from "./view/utils/common.js";
 import {render, RenderPosition} from "./view/utils/trip.js";
 import BoardPresenter from "./presenter/tripBoard";
 
@@ -13,7 +14,7 @@ const trips = [];
 for (let i = 0; i <= ELEMENT_COUNT; i++) {
   trips.push(generateTrip());
 }
-const sortedTrips = getAscendingSortedArray(trips);
+const sortedTrips = getDateAscendingSortedArray(trips);
 
 const pageHeaderContainer = document.querySelector(`.page-header__container`);
 const tripMainContainer = pageHeaderContainer.querySelector(`.trip-main`);
