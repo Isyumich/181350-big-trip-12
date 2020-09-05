@@ -7,6 +7,7 @@ import NoPointsMessageView from "../view/no-points-message.js";
 import {SortType} from "../const.js";
 import {render, RenderPosition, replace} from "../view/utils/trip.js";
 import {getTimeDescendingSortedArray, getPriceDescendingSortedArray} from "../view/utils/common";
+import TripDaysItemNoCountView from "../view/trip-days-item-no-count.js";
 
 const ELEMENT_COUNT = 15;
 
@@ -51,7 +52,7 @@ export default class TripBoard {
 
     this._sortEvents(sortType);
     this._clearListEvents();
-    this._renderTripBoard(this._tripEventsSection, this._trips);
+    this._renderTripBoard(this._tripEventsSection, this._trips, sortType);
   }
 
   _renderSort() {
@@ -97,19 +98,26 @@ export default class TripBoard {
     render(tripListElement, item, RenderPosition.BEFOREEND);
   }
 
-  _renderTripBoard(tripEventsSection, trips) {
+  _renderTripBoard(tripEventsSection, trips, sortType) {
     if (trips.length === 0) {
       render(tripEventsSection, this._noPointsComponent, RenderPosition.BEFOREEND);
     } else {
       const tripDaysList = this._daysListComponent;
 
       render(tripEventsSection, tripDaysList, RenderPosition.BEFOREEND);
-
-      for (let i = 0; i < ELEMENT_COUNT; i++) {
-        if (i === 0 || trips[i].startTime !== trips[i - 1].startTime) {
-          const tripDayItem = new TripDaysItemView(i, trips[i]);
-          render(tripDaysList, tripDayItem, RenderPosition.BEFOREEND);
-          this._renderTrip(tripDayItem.getElement().querySelector(`.trip-events__list`), trips[i]);
+      if (sortType === `time` || sortType === `price`) {
+        const tripDayItemNoCount = new TripDaysItemNoCountView();
+        render(tripDaysList, tripDayItemNoCount, RenderPosition.BEFOREEND);
+        for (let j = 0; j < ELEMENT_COUNT; j++) {
+          this._renderTrip(tripDayItemNoCount.getElement().querySelector(`.trip-events__list`), trips[j]);
+        }
+      } else {
+        for (let i = 0; i < ELEMENT_COUNT; i++) {
+          if (i === 0 || trips[i].startTime !== trips[i - 1].startTime) {
+            const tripDayItem = new TripDaysItemView(i, trips[i]);
+            render(tripDaysList, tripDayItem, RenderPosition.BEFOREEND);
+            this._renderTrip(tripDayItem.getElement().querySelector(`.trip-events__list`), trips[i]);
+          }
         }
       }
     }

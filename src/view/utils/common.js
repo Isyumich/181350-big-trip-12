@@ -51,7 +51,7 @@ export const getTimeDescendingSortedArray = function (array) {
     let maxElement = sortedArray[i];
 
     for (let j = i + 1; j < sortedArray.length; j++) {
-      if (sortedArray[j].finishTime - sortedArray[j].startTime > maxElement.finishTime - maxElement.startTime) {
+      if (Math.abs(sortedArray[j].finishTime - sortedArray[j].startTime) > Math.abs(maxElement.finishTime - maxElement.startTime)) {
         maxElement = sortedArray[j];
         const swap = sortedArray[i];
         sortedArray[i] = maxElement;
