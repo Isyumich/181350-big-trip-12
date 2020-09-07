@@ -65,3 +65,13 @@ export const remove = (component) => {
   component.getElement().remove();
   component.removeElement();
 };
+
+export const sortPrice = (a, b) => {
+  return b.price - a.price;
+};
+
+export const sortTime = (a, b) => {
+  return b.startTime - a.startTime;
+};
+
+

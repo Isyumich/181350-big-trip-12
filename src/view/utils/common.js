@@ -1,3 +1,4 @@
+
 export const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -10,7 +11,7 @@ export const getRandomArrayElement = function (sourceArray) {
   return sourceArray[index];
 };
 
-export const getAscendingSortedArray = function (array) {
+export const getDateAscendingSortedArray = function (array) {
   let sortedArray = array;
   for (let i = 0; i < sortedArray.length - 1; i++) {
     let minElement = sortedArray[i];
