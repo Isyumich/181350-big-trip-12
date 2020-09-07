@@ -28,40 +28,6 @@ export const getDateAscendingSortedArray = function (array) {
   return sortedArray;
 };
 
-export const getPriceDescendingSortedArray = function (array) {
-  let sortedArray = array;
-  for (let i = 0; i < sortedArray.length - 1; i++) {
-    let maxElement = sortedArray[i];
-
-    for (let j = i + 1; j < sortedArray.length; j++) {
-      if (sortedArray[j].price > maxElement.price) {
-        maxElement = sortedArray[j];
-        const swap = sortedArray[i];
-        sortedArray[i] = maxElement;
-        sortedArray[j] = swap;
-      }
-    }
-  }
-  return sortedArray;
-};
-
-export const getTimeDescendingSortedArray = function (array) {
-  let sortedArray = array;
-  for (let i = 0; i < sortedArray.length - 1; i++) {
-    let maxElement = sortedArray[i];
-
-    for (let j = i + 1; j < sortedArray.length; j++) {
-      if (Math.abs(sortedArray[j].finishTime - sortedArray[j].startTime) > Math.abs(maxElement.finishTime - maxElement.startTime)) {
-        maxElement = sortedArray[j];
-        const swap = sortedArray[i];
-        sortedArray[i] = maxElement;
-        sortedArray[j] = swap;
-      }
-    }
-  }
-  return sortedArray;
-};
-
 export const convertTime = (time) => {
   if (time < 10) {
     time = `0` + time;

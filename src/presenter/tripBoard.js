@@ -5,8 +5,7 @@ import NewEventItemView from "../view/new-event-item.js";
 import SortingView from "../view/sorting.js";
 import NoPointsMessageView from "../view/no-points-message.js";
 import {SortType} from "../const.js";
-import {render, RenderPosition, replace} from "../view/utils/trip.js";
-import {getTimeDescendingSortedArray, getPriceDescendingSortedArray} from "../view/utils/common";
+import {render, RenderPosition, replace, sortPrice, sortTime} from "../view/utils/trip.js";
 import TripDaysItemNoCountView from "../view/trip-days-item-no-count.js";
 
 const ELEMENT_COUNT = 15;
@@ -33,10 +32,10 @@ export default class TripBoard {
   _sortEvents(sortType) {
     switch (sortType) {
       case SortType.TIME:
-        this._trips = getTimeDescendingSortedArray(this._trips);
+        this._trips = this._trips.sort(sortTime);
         break;
       case SortType.PRICE:
-        this._trips = getPriceDescendingSortedArray(this._trips);
+        this._trips = this._trips.sort(sortPrice);
         break;
       default:
         this._trips = this._sourcedTrips.slice();
@@ -105,7 +104,7 @@ export default class TripBoard {
       const tripDaysList = this._daysListComponent;
 
       render(tripEventsSection, tripDaysList, RenderPosition.BEFOREEND);
-      if (sortType === `time` || sortType === `price`) {
+      if (sortType === SortType.TIME || sortType === SortType.PRICE) {
         const tripDayItemNoCount = new TripDaysItemNoCountView();
         render(tripDaysList, tripDayItemNoCount, RenderPosition.BEFOREEND);
         for (let j = 0; j < ELEMENT_COUNT; j++) {
