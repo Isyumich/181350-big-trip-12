@@ -7,7 +7,6 @@ import {render, RenderPosition, sortPrice, sortTime} from "../view/utils/trip.js
 import TripDaysItemNoCountView from "../view/trip-days-item-no-count";
 import TripPresenter from "./trip.js";
 import {updateItem} from "../view/utils/common.js";
-import AbstractView from "../view/abstract";
 
 const ELEMENT_COUNT = 15;
 
@@ -99,7 +98,6 @@ export default class TripBoard {
       render(tripEventsSection, tripDaysList, RenderPosition.BEFOREEND);
       if (sortType === SortType.TIME || sortType === SortType.PRICE) {
         const tripDayItemNoCount = new TripDaysItemNoCountView();
-        console.log(tripDayItemNoCount.getTemplate());
         render(tripDaysList, tripDayItemNoCount, RenderPosition.BEFOREEND);
         for (let j = 0; j < ELEMENT_COUNT; j++) {
           this._renderTrip(tripDayItemNoCount.getElement().querySelector(`.trip-events__list`), trips[j]);
