@@ -87,7 +87,7 @@ export default class TripEventsItem extends AbstractView {
 
   _clickHandler(evt) {
     evt.preventDefault();
-    this._callback.click();
+    this._callback.click(this._trip);
   }
 
   setClickHandler(callback) {

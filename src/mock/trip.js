@@ -8,6 +8,8 @@ import {
   ROUT_POINT,
 } from "../const.js";
 
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
 const generateOffers = (type) => {
   const offersList = [];
 
@@ -21,9 +23,14 @@ const generateOffers = (type) => {
   return (offersList.length > 0) ? offersList : null;
 };
 
+const isFavourite = Boolean(getRandomInteger(0, 1));
+
 export const generateTrip = () => {
   const type = getRandomArrayElement(ROUT_POINT);
   return {
+    id: generateId(),
+    isChange: false,
+    isFavourite,
     typeRoutPoint: type,
     city: getRandomArrayElement(CITIES),
     description: getRandomArrayElement(DESCRIPTIONS),
