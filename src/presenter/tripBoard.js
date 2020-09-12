@@ -3,7 +3,7 @@ import TripDaysItemView from "../view/trip-days-item.js";
 import SortingView from "../view/sorting.js";
 import NoPointsMessageView from "../view/no-points-message.js";
 import {SortType} from "../const.js";
-import {render, RenderPosition, sortPrice, sortTime} from "../view/utils/trip.js";
+import {render, RenderPosition, sortPrice, sortTime, remove} from "../view/utils/trip.js";
 import TripDaysItemNoCountView from "../view/trip-days-item-no-count";
 import TripPresenter from "./trip.js";
 import {updateItem} from "../view/utils/common.js";
@@ -67,6 +67,7 @@ export default class TripBoard {
 
     this._sortEvents(sortType);
     this._clearListEvents();
+    remove(this._daysListComponent);
     this._renderTripBoard(this._tripEventsSection, this._trips, sortType);
   }
 

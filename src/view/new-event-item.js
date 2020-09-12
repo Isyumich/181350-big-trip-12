@@ -149,10 +149,8 @@ export default class NewEventItem extends SmartView {
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
-  reset(trip) {
-    this.updateData(
-        NewEventItem.parseTripToData(trip)
-    );
+  reset() {
+    this.updateData(NewEventItem);
   }
 
   getTemplate() {
@@ -170,23 +168,33 @@ export default class NewEventItem extends SmartView {
       .addEventListener(`change`, this._typeChangeHandler);
     this.getElement()
       .querySelector(`.event__input--destination`)
-      .addEventListener(`change`, this._destinationChangeHandler);
+      .addEventListener(`change`, this._cityChangeHandler);
+    this.getElement()
+      .querySelector(`.event__input--price`)
+      .addEventListener(`change`, this._priceChangeHandler);
   }
 
   _typeChangeHandler(evt) {
     if (evt.target.value !== `on`) {
       this.updateData({
         isChange: true,
-        eventType: evt.target.value,
+        typeRoutPoint: evt.target.value,
         offers: OFFERS[evt.target.value],
       });
     }
   }
 
-  _destinationChangeHandler(evt) {
+  _priceChangeHandler(evt) {
     this.updateData({
       isChange: true,
-      destination: evt.target.value,
+      price: evt.target.value,
+    });
+  }
+
+  _cityChangeHandler(evt) {
+    this.updateData({
+      isChange: true,
+      city: evt.target.value,
       description: getRandomArrayElement(DESCRIPTIONS),
     });
   }
@@ -194,6 +202,7 @@ export default class NewEventItem extends SmartView {
   _formSubmitHandler(evt) {
     evt.preventDefault();
     this._callback.formSumbit(NewEventItem.parseDataToTrip(this._data));
+    console.log(NewEventItem.parseDataToTrip(this._data));
   }
 
   _favoriteClickHandler() {

@@ -13,8 +13,8 @@ export default class Trip {
     this._changeData = changeData;
     this._changeMode = changeMode;
 
-    this._item = null;
-    this._editItem = null;
+    this._itemComponent = null;
+    this._editItemComponent = null;
     this._mode = Mode.DEFAULT;
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
@@ -26,27 +26,27 @@ export default class Trip {
   init(trip) {
     this._trip = trip;
 
-    const prevEditItem = this._editItem;
-    const prevItem = this._item;
+    const prevEditItem = this._editItemComponent;
+    const prevItem = this._itemComponent;
 
-    this._editItem = new NewEventItemView(trip);
-    this._item = new TripEventsItemView(trip);
+    this._editItemComponent = new NewEventItemView(trip);
+    this._itemComponent = new TripEventsItemView(trip);
 
-    this._item.setClickHandler(this._handleClick);
-    this._editItem.setFormSubmitHandler(this._handleFormSubmit);
-    this._editItem.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._itemComponent.setClickHandler(this._handleClick);
+    this._editItemComponent.setFormSubmitHandler(this._handleFormSubmit);
+    this._editItemComponent.setFavoriteClickHandler(this._handleFavoriteClick);
 
     if (prevItem === null || prevEditItem === null) {
-      render(this._tripListElement, this._item, RenderPosition.BEFOREEND);
+      render(this._tripListElement, this._itemComponent, RenderPosition.BEFOREEND);
       return;
     }
 
     if (this._mode === Mode.DEFAULT) {
-      replace(this._item, prevItem);
+      replace(this._itemComponent, prevItem);
     }
 
     if (this._mode === Mode.EDITING) {
-      replace(this._editItem, prevEditItem);
+      replace(this._editItemComponent, prevEditItem);
     }
 
     remove(prevItem);
@@ -54,8 +54,8 @@ export default class Trip {
   }
 
   destroy() {
-    remove(this._item);
-    remove(this._editItem);
+    remove(this._itemComponent);
+    remove(this._editItemComponent);
   }
 
   resetView() {
@@ -65,20 +65,20 @@ export default class Trip {
   }
 
   _replaceTripToForm() {
-    replace(this._editItem, this._item);
+    replace(this._editItemComponent, this._itemComponent);
     this._changeMode();
     this._mode = Mode.EDITING;
   }
 
   _replaceFormToTrip() {
-    replace(this._item, this._editItem);
+    replace(this._itemComponent, this._editItemComponent);
     this._mode = Mode.DEFAULT;
   }
 
   _onEscKeyDown(evt) {
     if (evt.key === `Escape` || evt.key === `Esc`) {
       evt.preventDefault();
-      this._editItem.reset(this._item);
+      this._editItemComponent.reset(this._itemComponent);
       this._replaceFormToTrip();
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     }
