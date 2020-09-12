@@ -1,5 +1,6 @@
-import {convertTime} from "./utils/common.js";
-import AbstractView from "./abstract.js";
+import {convertTime, getRandomArrayElement} from "./utils/common.js";
+import SmartView from "./smart.js";
+import {DESCRIPTIONS, OFFERS} from "../const.js";
 
 const convertYear = (year) => {
   return String(year).slice(2, 4);
@@ -20,14 +21,13 @@ const getPrice = (price) => price === null ? `` : price;
 
 export const createNewEventItemTemplate = (trip) => {
   const {typeRoutPoint, city, price, startTime, finishTime} = trip;
-
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
       <header class="event__header">
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-1">
             <span class="visually-hidden">Choose event type</span>
-            <img class="event__type-icon" width="17" height="17" src="img/icons/bus.png" alt="Event type icon">
+            <img class="event__type-icon" width="17" height="17" src="img/icons/${typeRoutPoint}.png" alt="Event type icon">
           </label>
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -127,30 +127,111 @@ export const createNewEventItemTemplate = (trip) => {
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Cancel</button>
+
+        <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" checked>
+        <label class="event__favorite-btn" for="event-favorite-1">
+          <span class="visually-hidden">Add to favorite</span>
+          <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+            <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
+          </svg>
+        </label>
       </header>
     </form>`
   );
 };
 
-export default class NewEventItem extends AbstractView {
+export default class NewEventItem extends SmartView {
   constructor(trip) {
     super();
 
-    this._trip = trip;
-    this._editClickHandler = this._editClickHandler.bind(this);
+    this._data = NewEventItem.parseTripToData(trip);
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+  }
+
+  reset() {
+    this.updateData(NewEventItem);
   }
 
   getTemplate() {
-    return createNewEventItemTemplate(this._trip);
+    return createNewEventItemTemplate(this._data);
   }
 
-  _editClickHandler(evt) {
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setFormSubmitHandler(this._callback.formSumbit);
+  }
+
+  _setInnerHandlers() {
+    this.getElement()
+      .querySelector(`.event__type-wrapper`)
+      .addEventListener(`change`, this._typeChangeHandler);
+    this.getElement()
+      .querySelector(`.event__input--destination`)
+      .addEventListener(`change`, this._cityChangeHandler);
+    this.getElement()
+      .querySelector(`.event__input--price`)
+      .addEventListener(`change`, this._priceChangeHandler);
+  }
+
+  _typeChangeHandler(evt) {
+    if (evt.target.value !== `on`) {
+      this.updateData({
+        isChange: true,
+        typeRoutPoint: evt.target.value,
+        offers: OFFERS[evt.target.value],
+      });
+    }
+  }
+
+  _priceChangeHandler(evt) {
+    this.updateData({
+      isChange: true,
+      price: evt.target.value,
+    });
+  }
+
+  _cityChangeHandler(evt) {
+    this.updateData({
+      isChange: true,
+      city: evt.target.value,
+      description: getRandomArrayElement(DESCRIPTIONS),
+    });
+  }
+
+  _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.editClick();
+    this._callback.formSumbit(NewEventItem.parseDataToTrip(this._data));
+    console.log(NewEventItem.parseDataToTrip(this._data));
   }
 
-  setEditClickHandler(callback) {
-    this._callback.editClick = callback;
-    this.getElement().addEventListener(`click`, this._editClickHandler);
+  _favoriteClickHandler() {
+    this.updateData({
+      isChange: true,
+      isFavorite: !this._data.isFavorite
+    });
+  }
+
+  setFormSubmitHandler(callback) {
+    this._callback.formSumbit = callback;
+    this.getElement().addEventListener(`submit`, this._formSubmitHandler);
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
+  }
+
+  static parseTripToData(trip) {
+    return Object.assign(
+        {},
+        trip
+    );
+  }
+
+  static parseDataToTrip(data) {
+    data = Object.assign({}, data);
+    data.isChange = false;
+    return data;
   }
 }
