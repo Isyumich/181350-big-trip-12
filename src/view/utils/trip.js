@@ -71,7 +71,7 @@ export const sortPrice = (a, b) => {
 };
 
 export const sortTime = (a, b) => {
-  return b.startTime - a.startTime;
+  return Math.abs(b.dateTo - b.dateFrom) - Math.abs(a.dateTo - a.dateFrom);
 };
 
 

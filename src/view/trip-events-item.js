@@ -1,36 +1,36 @@
-import {convertTime} from "./utils/common.js";
+import {convertTimeFormat} from "./utils/common.js";
 import AbstractView from "./abstract.js";
 
-const getDiffTime = (startTime, finishTime) => {
+const getDiffTime = (dateFrom, dateTo) => {
   const MINUTE_IN_DAY = 1440;
   const MINUTE_IN_HOUR = 60;
 
-  const diffMinute = Math.abs((finishTime.getTime() - startTime.getTime())) / 1000 / 60;
+  const diffMinute = Math.abs((dateTo.getTime() - dateFrom.getTime())) / 1000 / 60;
   const dayCount = Math.floor(diffMinute / MINUTE_IN_DAY);
   const dayCountRemains = diffMinute % MINUTE_IN_DAY;
   const hourCount = Math.floor(dayCountRemains / MINUTE_IN_HOUR);
   const minuteCount = dayCountRemains % MINUTE_IN_HOUR;
 
   return `${
-    dayCount > 1 ? `${convertTime(dayCount)}D ` : ``
+    dayCount > 1 ? `${convertTimeFormat(dayCount)}D ` : ``
   } ${
-    hourCount > 1 ? `${convertTime(minuteCount)}H ` : ``
+    hourCount > 1 ? `${convertTimeFormat(hourCount)}H ` : ``
   } ${
-    minuteCount > 1 ? `${convertTime(minuteCount)}M` : ``
+    minuteCount > 1 ? `${convertTimeFormat(minuteCount)}M` : ``
   }`;
 };
 
-const getRandomDate = (date) => {
-  return date.getFullYear() + `-` + convertTime(date.getMonth() + 1) + `-` + convertTime(date.getDate()) +
-    `T` + convertTime(date.getHours()) + `:` + convertTime(date.getMinutes());
+const getDate = (date) => {
+  return date.getFullYear() + `-` + convertTimeFormat(date.getMonth() + 1) + `-` + convertTimeFormat(date.getDate()) +
+    `T` + convertTimeFormat(date.getHours()) + `:` + convertTimeFormat(date.getMinutes());
 };
 
-const getRandomTime = (date) => {
-  return convertTime(date.getHours()) + `:` + convertTime(date.getMinutes());
+const getTime = (date) => {
+  return convertTimeFormat(date.getHours()) + `:` + convertTimeFormat(date.getMinutes());
 };
 
 export const createTripEventsItemTemplate = (trip) => {
-  const {typeRoutPoint, city, price, startTime, finishTime, offers} = trip;
+  const {typeRoutPoint, city, price, dateFrom, dateTo, offers} = trip;
 
   let offersName = offers === null ? `` : offers[0].name;
   let offersPrice = offers === null ? `` : offers[0].price;
@@ -45,11 +45,11 @@ export const createTripEventsItemTemplate = (trip) => {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${getRandomDate(startTime)}">${getRandomTime(startTime)}</time>
+            <time class="event__start-time" datetime="${getDate(dateFrom)}">${getTime(dateFrom)}</time>
               &mdash;
-            <time class="event__end-time" datetime="${getRandomDate(finishTime)}">${getRandomTime(finishTime)}</time>
+            <time class="event__end-time" datetime="${getDate(dateTo)}">${getTime(dateTo)}</time>
           </p>
-          <p class="event__duration">${getDiffTime(startTime, finishTime)}</p>
+          <p class="event__duration">${getDiffTime(dateFrom, dateTo)}</p>
         </div>
 
         <p class="event__price">
