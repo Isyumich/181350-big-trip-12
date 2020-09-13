@@ -105,7 +105,7 @@ export default class TripBoard {
         }
       } else {
         for (let i = 0; i < ELEMENT_COUNT; i++) {
-          if (i === 0 || trips[i].startTime !== trips[i - 1].startTime) {
+          if (i === 0 || trips[i].dateFrom !== trips[i - 1].dateFrom) {
             const tripDayItem = new TripDaysItemView(i, trips[i]);
             render(tripDaysList, tripDayItem, RenderPosition.BEFOREEND);
             this._renderTrip(tripDayItem.getElement().querySelector(`.trip-events__list`), trips[i]);

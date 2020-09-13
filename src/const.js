@@ -14,6 +14,10 @@ export const OFFERS = [`car`, `luggage`, `uber`, `food`, `gid`, `conditioner`];
 export const MAX_OFFERS_COUNT = 5;
 export const OFFERS_PRICE = [20, 40, 60, 80, 100, 120];
 export const YEAR_MONTHS = [`JANUARY`, `FEBRUARY`, `MARCH`, `APRIL`, `MAY`, `JUNE`, `JULY`, `AUGUST`, `SEPTEMBER`, `OCTOBER`, `NOVEMBER`, `DECEMBER`];
+export const MAX_DAY_DIFF = 10;
+export const MAX_DAY_DURATION = 3;
+export const MAX_HOURS_DURATION = 23;
+export const MAX_MINUTES_DURATION = 59;
 
 export const SortType = {
   EVENT: `event`,

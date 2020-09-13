@@ -1,6 +1,10 @@
-import {convertTime, getRandomArrayElement} from "./utils/common.js";
+import {convertTimeFormat, getRandomArrayElement} from "./utils/common.js";
 import SmartView from "./smart.js";
 import {DESCRIPTIONS, OFFERS} from "../const.js";
+
+import flatpickr from "flatpickr";
+
+import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const convertYear = (year) => {
   return String(year).slice(2, 4);
@@ -11,8 +15,8 @@ const getCity = (city) => city === null ? `` : city;
 const getTypePoint = (point) => point === null ? `` : point;
 
 const getFormatTime = (time) => {
-  return convertTime(time.getDate()) + `/` + convertTime(time.getMonth()) + `/` + convertYear(time.getFullYear())
-  + ` ` + convertTime(time.getHours()) + `:` + convertTime(time.getMinutes());
+  return convertTimeFormat(time.getDate()) + `/` + convertTimeFormat(time.getMonth()) + `/` + convertYear(time.getFullYear())
+  + ` ` + convertTimeFormat(time.getHours()) + `:` + convertTimeFormat(time.getMinutes());
 };
 
 const getTime = (time) => time === null ? `` : getFormatTime(time);
@@ -20,7 +24,7 @@ const getTime = (time) => time === null ? `` : getFormatTime(time);
 const getPrice = (price) => price === null ? `` : price;
 
 export const createNewEventItemTemplate = (trip) => {
-  const {typeRoutPoint, city, price, startTime, finishTime} = trip;
+  const {typeRoutPoint, city, price, dateFrom, dateTo} = trip;
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
       <header class="event__header">
@@ -109,12 +113,12 @@ export const createNewEventItemTemplate = (trip) => {
           <label class="visually-hidden" for="event-start-time-1">
             From
           </label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${getTime(startTime)}">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${getTime(dateFrom)}">
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">
             To
           </label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${getTime(finishTime)}">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${getTime(dateTo)}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -143,10 +147,20 @@ export const createNewEventItemTemplate = (trip) => {
 export default class NewEventItem extends SmartView {
   constructor(trip) {
     super();
-
     this._data = NewEventItem.parseTripToData(trip);
+    this._datepickerStart = null;
+    this._datepickerEnd = null;
+
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._typeChangeHandler = this._typeChangeHandler.bind(this);
+    this._cityChangeHandler = this._cityChangeHandler.bind(this);
+    this._priceChangeHandler = this._priceChangeHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._dateFromChangeHandler = this._dateFromChangeHandler.bind(this);
+    this._dateToChangeHandler = this._dateToChangeHandler.bind(this);
+
+    this._setInnerHandlers();
+    this._setDatepickers();
   }
 
   reset() {
@@ -159,7 +173,40 @@ export default class NewEventItem extends SmartView {
 
   restoreHandlers() {
     this._setInnerHandlers();
+    this._setDatepickers();
     this.setFormSubmitHandler(this._callback.formSumbit);
+  }
+
+  _setDatepickers() {
+    if (this._datepickerStart || this._datepickerEnd) {
+      this._datepickerStart.destroy();
+      this._datepickerEnd.destroy();
+
+      this._datepickerStart = null;
+      this._datepickerEnd = null;
+    }
+
+    this._datepickerStart = flatpickr(
+        this.getElement().querySelector(`#event-start-time-1`),
+        {
+          enableTime: true,
+          dateFormat: `d/m/y H:i`,
+          defaultDate: this._data.dateFrom,
+          minDate: new Date(),
+          onChange: this._dateFromChangeHandler
+        }
+    );
+
+    this._datepickerEnd = flatpickr(
+        this.getElement().querySelector(`#event-end-time-1`),
+        {
+          enableTime: true,
+          dateFormat: `d/m/y H:i`,
+          defaultDate: this._data.dateTo,
+          minDate: this._data.dateFrom,
+          onChange: this._dateToChangeHandler
+        }
+    );
   }
 
   _setInnerHandlers() {
@@ -199,10 +246,23 @@ export default class NewEventItem extends SmartView {
     });
   }
 
+  _dateFromChangeHandler([time]) {
+    this.updateData({
+      "isChange": true,
+      "dateFrom": time,
+    });
+  }
+
+  _dateToChangeHandler([time]) {
+    this.updateData({
+      "isChange": true,
+      "dateTo": time,
+    });
+  }
+
   _formSubmitHandler(evt) {
     evt.preventDefault();
     this._callback.formSumbit(NewEventItem.parseDataToTrip(this._data));
-    console.log(NewEventItem.parseDataToTrip(this._data));
   }
 
   _favoriteClickHandler() {

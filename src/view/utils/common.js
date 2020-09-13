@@ -17,7 +17,7 @@ export const getDateAscendingSortedArray = function (array) {
     let minElement = sortedArray[i];
 
     for (let j = i + 1; j < sortedArray.length; j++) {
-      if (sortedArray[j].startTime < minElement.startTime) {
+      if (sortedArray[j].dateFrom < minElement.dateFrom) {
         minElement = sortedArray[j];
         const swap = sortedArray[i];
         sortedArray[i] = minElement;
@@ -28,7 +28,7 @@ export const getDateAscendingSortedArray = function (array) {
   return sortedArray;
 };
 
-export const convertTime = (time) => {
+export const convertTimeFormat = (time) => {
   if (time < 10) {
     time = `0` + time;
   }

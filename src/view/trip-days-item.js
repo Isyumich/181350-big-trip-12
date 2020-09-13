@@ -1,4 +1,4 @@
-import {convertTime} from "./utils/common.js";
+import {convertTimeFormat} from "./utils/common.js";
 import {YEAR_MONTHS} from "../const.js";
 import AbstractView from "./abstract.js";
 
@@ -7,17 +7,17 @@ const getMonth = (time, months) => {
 };
 
 const getDateFormat = (time) => {
-  return time.getFullYear() + `-` + convertTime(time.getMonth()) + `-` + convertTime(time.getDate());
+  return time.getFullYear() + `-` + convertTimeFormat(time.getMonth()) + `-` + convertTimeFormat(time.getDate());
 };
 
 export const createTripDaysItemTemplate = (number, trip) => {
-  const {startTime} = trip;
-  const startDateTime = getDateFormat(startTime);
+  const {dateFrom} = trip;
+  const startDateTime = getDateFormat(dateFrom);
 
   return (`<li class="trip-days__item  day">
       <div class="day__info">
         <span class="day__counter">${number + 1}</span>
-        <time class="day__date" datetime="${startDateTime}">${getMonth(startTime, YEAR_MONTHS)} ${startTime.getDate()}</time>
+        <time class="day__date" datetime="${startDateTime}">${getMonth(dateFrom, YEAR_MONTHS)} ${dateFrom.getDate()}</time>
       </div>
       <ul class="trip-events__list">
       </ul>

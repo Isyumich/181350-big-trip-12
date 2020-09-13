@@ -4,7 +4,7 @@ import MenuView from "./view/menu.js";
 import FilterView from "./view/filter.js";
 import {generateTrip} from "./mock/trip.js";
 import {getDateAscendingSortedArray} from "./view/utils/common.js";
-import {render, RenderPosition} from "./view/utils/trip.js";
+import {render, RenderPosition, sortPrice} from "./view/utils/trip.js";
 import BoardPresenter from "./presenter/tripBoard";
 
 const ELEMENT_COUNT = 15;
