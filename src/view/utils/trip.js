@@ -58,6 +58,10 @@ export const replace = (newChild, oldChild) => {
 };
 
 export const remove = (component) => {
+  if (component === null) {
+    return;
+  }
+
   if (!(component instanceof AbstractView)) {
     throw new Error(`Can remove only components`);
   }
@@ -72,6 +76,10 @@ export const sortPrice = (a, b) => {
 
 export const sortTime = (a, b) => {
   return Math.abs(b.dateTo - b.dateFrom) - Math.abs(a.dateTo - a.dateFrom);
+};
+
+export const isTimeChange = (dateA, dateB) => {
+  return dateA === dateB ? true : false;
 };
 
 

@@ -1,63 +1,101 @@
 import TripDaysListView from "../view/trip-days-list.js";
 import TripDaysItemView from "../view/trip-days-item.js";
-import SortingView from "../view/sorting.js";
 import NoPointsMessageView from "../view/no-points-message.js";
-import {SortType} from "../const.js";
+import {SortType, UserAction, UpdateType, FilterType} from "../const.js";
 import {render, RenderPosition, sortPrice, sortTime, remove} from "../view/utils/trip.js";
 import TripDaysItemNoCountView from "../view/trip-days-item-no-count";
+import {filter} from "../view/utils/filter.js";
 import TripPresenter from "./trip.js";
-import {updateItem} from "../view/utils/common.js";
+import TripNewPresenter from "./new-trip.js";
 
 const ELEMENT_COUNT = 15;
 
 export default class TripBoard {
-  constructor(tripEventsSection) {
+  constructor(tripEventsSection, tripsModel, filterModel) {
+    this._tripsModel = tripsModel;
+    this._filterModel = filterModel;
     this._tripEventsSection = tripEventsSection;
     this._currentSortType = SortType.EVENT;
     this._tripPresenter = {};
 
     this._daysListComponent = new TripDaysListView();
-    this._sortingComponent = new SortingView();
+    this._sortingComponent = null;
     this._noPointsComponent = new NoPointsMessageView();
 
+    this._handleViewAction = this._handleViewAction.bind(this);
+    this._handleModelTrip = this._handleModelTrip.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
-    this._handleTripChange = this._handleTripChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+
+    this._tripsModel.addObserver(this._handleModelTrip);
+    this._filterModel.addObserver(this._handleModelTrip);
+
+    this._tripNewPresenter = new TripNewPresenter(this._tripEventsSection, this._handleViewAction);
   }
 
-  init(trips) {
-    this._trips = trips.slice();
-    this._sourcedTrips = trips.slice();
+  init() {
+    this._renderTripBoard();
+  }
 
-    this._renderSort();
-    this._renderTripBoard(this._tripEventsSection, this._trips);
+  createEvent() {
+    this._currentSortType = SortType.EVENT;
+    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this._tripNewPresenter.init();
+  }
+
+  _getTrips() {
+    const filterType = this._filterModel.getFilter();
+    const trips = this._tripsModel.getTrips();
+    let filteredTrips = filter[filterType](trips);
+
+    switch (this._currentSortType) {
+      case SortType.TIME:
+        filteredTrips = filteredTrips.slice().sort(sortTime);
+        break;
+      case SortType.PRICE:
+        filteredTrips = filteredTrips.slice().sort(sortPrice);
+        break;
+      default:
+        filteredTrips = filteredTrips.slice();
+    }
+    return filteredTrips;
   }
 
   _handleModeChange() {
+    this._tripNewPresenter.destroy();
     Object
       .values(this._tripPresenter)
       .forEach((presenter) => presenter.resetView());
   }
 
-  _handleTripChange(updatedTrip) {
-    this._boardTasks = updateItem(this._trips, updatedTrip);
-    this._sourcedBoardTasks = updateItem(this._sourcedTrips, updatedTrip);
-    this._tripPresenter[updatedTrip.id].init(updatedTrip);
+  _handleViewAction(actionType, updateType, update) {
+    switch (actionType) {
+      case UserAction.UPDATE_TRIP:
+        this._tripsModel.updateTrip(updateType, update);
+        break;
+      case UserAction.ADD_TRIP:
+        this._tripsModel.addTrip(updateType, update);
+        break;
+      case UserAction.DELETE_TRIP:
+        this._tripsModel.deleteTrip(updateType, update);
+        break;
+    }
   }
 
-  _sortEvents(sortType) {
-    switch (sortType) {
-      case SortType.TIME:
-        this._trips = this._trips.sort(sortTime);
+  _handleModelTrip(updateType, data) {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this._tripPresenter[data.id].init(data);
         break;
-      case SortType.PRICE:
-        this._trips = this._trips.sort(sortPrice);
+      case UpdateType.MINOR:
+        this._clearListTrips();
+        this._renderTripBoard();
         break;
-      default:
-        this._trips = this._sourcedTrips.slice();
+      case UpdateType.MAJOR:
+        this._clearListTrips({resetSortType: true});
+        this._renderTripBoard();
+        break;
     }
-
-    this._currentSortType = sortType;
   }
 
   _handleSortTypeChange(sortType) {
@@ -65,10 +103,10 @@ export default class TripBoard {
       return;
     }
 
-    this._sortEvents(sortType);
-    this._clearListEvents();
+    this._currentSortType = sortType;
+    this._clearListTrips({resetRenderedTripCount: true});
     remove(this._daysListComponent);
-    this._renderTripBoard(this._tripEventsSection, this._trips, sortType);
+    this._renderTripBoard(this._tripEventsSection, this._tripsModel, sortType);
   }
 
   _renderSort() {
@@ -77,7 +115,7 @@ export default class TripBoard {
     this._sortingComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
-  _clearListEvents() {
+  _clearListTrips() {
     Object
       .values(this._tripPresenter)
       .forEach((presenter) => presenter.destroy());
@@ -85,7 +123,7 @@ export default class TripBoard {
   }
 
   _renderTrip(tripListElement, trip) {
-    const tripPresenter = new TripPresenter(tripListElement, this._handleTripChange, this._handleModeChange);
+    const tripPresenter = new TripPresenter(tripListElement, this._handleViewAction, this._handleModeChange);
     tripPresenter.init(trip);
 
     this._tripPresenter[trip.id] = tripPresenter;

@@ -12,7 +12,7 @@ import {
   MAX_HOURS_DURATION,
 } from "../const.js";
 
-const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
 const getTimeDiff = (maxMinutesDuration, maxDaysDuration, maxHoursDuration, maxDaysDiff) => {
   let currentDate = new Date();
