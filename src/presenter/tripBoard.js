@@ -5,7 +5,7 @@ import NoPointsMessageView from "../view/no-points-message.js";
 import {SortType, UserAction, UpdateType, FilterType} from "../const.js";
 import {render, RenderPosition, sortPrice, sortTime, remove} from "../view/utils/trip.js";
 import TripDaysItemNoCountView from "../view/trip-days-item-no-count";
-// import {filter} from "../view/utils/filter.js";
+import {filter} from "../view/utils/filter.js";
 import TripPresenter from "./trip.js";
 import TripNewPresenter from "./new-trip.js";
 
@@ -46,20 +46,20 @@ export default class TripBoard {
   }
 
   _getTrips() {
-    // const filterType = this._filterModel.getFilter();
+    const filterType = this._filterModel.getFilter();
     const trips = this._tripsModel.getTrips();
-    // const filteredTrips = filter[filterType](trips);
+    const filteredTrips = filter[filterType](trips);
 
     switch (this._currentSortType) {
       case SortType.TIME:
-        return trips.slice().sort(sortTime);
-        // return filteredTrips.slice().sort(sortTime);
+        // return trips.slice().sort(sortTime);
+        return filteredTrips.slice().sort(sortTime);
       case SortType.PRICE:
-        return trips.slice().sort(sortPrice);
-        // return filteredTrips.slice().sort(sortPrice);
+        // return trips.slice().sort(sortPrice);
+        return filteredTrips.slice().sort(sortPrice);
     }
-    return trips;
-    // return filteredTrips;
+    // return trips;
+    return filteredTrips;
   }
 
   _handleModeChange() {
