@@ -52,13 +52,10 @@ export default class TripBoard {
 
     switch (this._currentSortType) {
       case SortType.TIME:
-        // return trips.slice().sort(sortTime);
         return filteredTrips.slice().sort(sortTime);
       case SortType.PRICE:
-        // return trips.slice().sort(sortPrice);
         return filteredTrips.slice().sort(sortPrice);
     }
-    // return trips;
     return filteredTrips;
   }
 

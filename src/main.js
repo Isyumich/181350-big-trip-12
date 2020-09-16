@@ -1,5 +1,6 @@
 import RouteView from "./view/route.js";
 import MenuView from "./view/menu.js";
+import FilterView from "./view/filter.js";
 import TripsModel from "./model/points";
 import FilterModel from "./model/filter.js";
 import {generateTrip} from "./mock/trip.js";
@@ -28,6 +29,7 @@ const switchFirstHeader = tripControlElement.querySelector(`h2`);
 
 render(tripMainContainer, new RouteView(), RenderPosition.AFTERBEGIN);
 render(switchFirstHeader, new MenuView(), RenderPosition.AFTEREND);
+render(tripControlElement, new FilterView(), RenderPosition.BEFOREEND);
 
 const filterPresenter = new FilterPresenter(tripControlElement, filterModel, tripsModel);
 
@@ -35,6 +37,7 @@ const pageMainContainer = document.querySelector(`.page-main`);
 const tripEventsSection = pageMainContainer.querySelector(`.trip-events`);
 
 const boardPresenter = new BoardPresenter(tripEventsSection, tripsModel, filterModel);
+
 filterPresenter.init();
 
 boardPresenter.init();
