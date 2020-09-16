@@ -4,9 +4,10 @@ import {render, remove, RenderPosition} from "../view/utils/trip.js";
 import {UserAction, UpdateType} from "../const.js";
 
 export default class EventNew {
-  constructor(tripListContainer, changeData) {
+  constructor(trips, tripListContainer, changeData) {
     this._tripListContainer = tripListContainer;
     this._changeData = changeData;
+    this._trips = trips;
 
     this._tripEditComponent = null;
 
@@ -19,8 +20,7 @@ export default class EventNew {
     if (this._tripEditComponent !== null) {
       return;
     }
-
-    this._tripEditComponent = new NewEventItemView();
+    this._tripEditComponent = new NewEventItemView(this._trips);
     this._tripEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._tripEditComponent.setDeleteClickHandler(this._handleDeleteClick);
 

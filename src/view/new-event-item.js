@@ -155,7 +155,8 @@ export default class NewEventItem extends SmartView {
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._cityChangeHandler = this._cityChangeHandler.bind(this);
     this._priceChangeHandler = this._priceChangeHandler.bind(this);
-    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._dateFromChangeHandler = this._dateFromChangeHandler.bind(this);
     this._dateToChangeHandler = this._dateToChangeHandler.bind(this);
 
@@ -265,11 +266,11 @@ export default class NewEventItem extends SmartView {
     this._callback.formSumbit(NewEventItem.parseDataToTrip(this._data));
   }
 
-  _favoriteClickHandler() {
-    this.updateData({
-      isChange: true,
-      isFavorite: !this._data.isFavorite
-    });
+  _handleFavoriteClick() {
+    this.updateData(
+        {
+          isFavorite: !this._data.isFavorite
+        });
   }
 
   setFormSubmitHandler(callback) {
@@ -279,7 +280,18 @@ export default class NewEventItem extends SmartView {
 
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
-    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
+
+    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._handleFavoriteClick);
+  }
+
+  _formDeleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick(NewEventItem.parseDataToTrip(this._data));
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formDeleteClickHandler);
   }
 
   static parseTripToData(trip) {
