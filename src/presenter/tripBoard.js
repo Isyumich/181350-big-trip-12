@@ -87,11 +87,15 @@ export default class TripBoard {
         break;
       case UpdateType.MINOR:
         this._clearListTrips();
-        this._renderTripBoard(this._tripEventsSection, this._getTrips(), SortType.EVENT);
+        remove(this._noPointsComponent);
+        remove(this._daysListComponent);
+        this._renderTripBoard(this._tripEventsSection, this._getTrips(), this._currentSortType);
         break;
       case UpdateType.MAJOR:
         this._clearListTrips({resetSortType: true});
-        this._renderTripBoard(this._tripEventsSection, this._getTrips(), SortType.EVENT);
+        remove(this._noPointsComponent);
+        remove(this._daysListComponent);
+        this._renderTripBoard(this._tripEventsSection, this._getTrips(), this._currentSortType);
         break;
     }
   }

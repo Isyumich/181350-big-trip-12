@@ -1,5 +1,5 @@
 import FilterView from "../view/filter.js";
-import {render, remove, replace} from "../view/utils/trip.js";
+import {render, remove, replace, RenderPosition} from "../view/utils/trip.js";
 import {UpdateType} from "../const.js";
 
 export default class Filter {
@@ -27,7 +27,7 @@ export default class Filter {
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
     if (prevFilterComponent === null) {
-      render(this._filterContainer, this._filterComponent);
+      render(this._filterContainer, this._filterComponent, RenderPosition.BEFOREEND);
       return;
     }
 
