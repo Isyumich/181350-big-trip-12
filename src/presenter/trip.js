@@ -1,6 +1,8 @@
-import NewEventItemView from "../view/new-event-item";
-import TripEventsItemView from "../view/trip-events-item";
-import {render, RenderPosition, replace, remove} from "../view/utils/trip";
+import NewEventItemView from "../view/new-event-item.js";
+import TripEventsItemView from "../view/trip-events-item.js";
+import {render, RenderPosition, replace, remove} from "../view/utils/trip.js";
+import {UserAction, UpdateType} from "../const.js";
+import {isTimeChange} from "../view/utils/trip.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -20,7 +22,7 @@ export default class Trip {
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleClick = this._handleClick.bind(this);
-    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
   }
 
   init(trip) {
@@ -35,6 +37,7 @@ export default class Trip {
     this._itemComponent.setClickHandler(this._handleClick);
     this._editItemComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._editItemComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._editItemComponent.setDeleteClickHandler(this._handleDeleteClick);
 
     if (prevItem === null || prevEditItem === null) {
       render(this._tripListElement, this._itemComponent, RenderPosition.BEFOREEND);
@@ -89,21 +92,22 @@ export default class Trip {
     document.addEventListener(`keydown`, this._onEscKeyDown);
   }
 
-  _handleFormSubmit(trip) {
+  _handleFormSubmit(update) {
+    const isMinorUpdate = isTimeChange(this._trip.dateFrom, update.dateFrom);
+    this._changeData(
+        UserAction.UPDATE_TRIP,
+        isMinorUpdate ? UpdateType.PATCH : UpdateType.MINOR,
+        update
+    );
     this._replaceFormToTrip();
-    this._changeData(trip);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
-  _handleFavoriteClick() {
+  _handleDeleteClick(trip) {
     this._changeData(
-        Object.assign(
-            {},
-            this._trip,
-            {
-              isFavorite: !this._trip.isFavorite
-            }
-        )
+        UserAction.DELETE_TRIP,
+        UpdateType.MINOR,
+        trip
     );
   }
 }
