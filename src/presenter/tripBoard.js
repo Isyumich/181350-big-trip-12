@@ -1,4 +1,5 @@
 import TripDaysListView from "../view/trip-days-list.js";
+import LoadingMessageView from "../view/loading-message";
 import TripDaysItemView from "../view/trip-days-item.js";
 import SortingView from "../view/sorting.js";
 import NoPointsMessageView from "../view/no-points-message.js";
@@ -21,6 +22,7 @@ export default class TripBoard {
 
     this._daysListComponent = new TripDaysListView();
     this._sortingComponent = null;
+    this._loadingComponent = null;
     this._noPointsComponent = new NoPointsMessageView();
 
     this._handleViewAction = this._handleViewAction.bind(this);
@@ -35,8 +37,17 @@ export default class TripBoard {
   }
 
   init() {
+    // this._renderLoading();
+    remove(this._sortingComponent);
     this._renderSort();
     this._renderTripBoard(this._tripEventsSection, this._getTrips(), SortType.EVENT);
+  }
+
+  destroy() {
+    this._clearListTrips({resetSortType: true});
+
+    this._tripsModel.removeObserver(this._handleModelTrip);
+    this._filterModel.removeObserver(this._handleModelTrip);
   }
 
   createEvent() {
@@ -84,6 +95,7 @@ export default class TripBoard {
     switch (updateType) {
       case UpdateType.PATCH:
         this._tripPresenter[data.id].init(data);
+        this._renderLoading();
         break;
       case UpdateType.MINOR:
         this._clearListTrips();
@@ -98,6 +110,17 @@ export default class TripBoard {
         this._renderTripBoard(this._tripEventsSection, this._getTrips(), this._currentSortType);
         break;
     }
+  }
+
+  _renderLoading() {
+    remove(this._loadingComponent);
+    if (this._loadingComponent !== null) {
+      this._loadingComponent = null;
+    }
+
+    this._loadingComponent = new LoadingMessageView(this._getTrips());
+
+    render(document.querySelector(`.trip-main`), this._loadingComponent, RenderPosition.AFTERBEGIN);
   }
 
   _handleSortTypeChange(sortType) {
@@ -136,6 +159,7 @@ export default class TripBoard {
   }
 
   _renderTripBoard(tripEventsSection, trips, sortType) {
+    remove(this._daysListComponent);
     if (trips.length === 0) {
       render(tripEventsSection, this._noPointsComponent, RenderPosition.BEFOREEND);
     } else {

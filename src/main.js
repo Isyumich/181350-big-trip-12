@@ -1,12 +1,14 @@
 import RouteView from "./view/route.js";
 import MenuView from "./view/menu.js";
+import StatisticsView from "./view/statistics.js";
 import TripsModel from "./model/points";
 import FilterModel from "./model/filter.js";
 import {generateTrip} from "./mock/trip.js";
 import {getDateAscendingSortedArray} from "./view/utils/common.js";
-import {render, RenderPosition} from "./view/utils/trip.js";
+import {render, RenderPosition, remove} from "./view/utils/trip.js";
 import BoardPresenter from "./presenter/tripBoard";
 import FilterPresenter from "./presenter/filter.js";
+import {MenuItem} from "./const.js";
 
 const ELEMENT_COUNT = 15;
 
@@ -25,9 +27,34 @@ const pageHeaderContainer = document.querySelector(`.page-header__container`);
 const tripMainContainer = pageHeaderContainer.querySelector(`.trip-main`);
 const tripControlElement = pageHeaderContainer.querySelector(`.trip-controls`);
 const switchFirstHeader = tripControlElement.querySelector(`h2`);
+const siteTripEvents = document.querySelector(`.trip-events`);
+const menuComponent = new MenuView();
 
 render(tripMainContainer, new RouteView(), RenderPosition.AFTERBEGIN);
-render(switchFirstHeader, new MenuView(), RenderPosition.AFTEREND);
+render(switchFirstHeader, menuComponent, RenderPosition.AFTEREND);
+
+let statisticsComponent = null;
+
+const handleSiteMenuClick = (menuItem) => {
+  switch (menuItem) {
+    case MenuItem.TABLE:
+      boardPresenter.destroy();
+      remove(statisticsComponent);
+      boardPresenter.init();
+      menuComponent.setMenuItem(MenuItem.TABLE);
+      break;
+    case MenuItem.STATISTICS:
+      boardPresenter.destroy();
+      remove(statisticsComponent);
+      statisticsComponent = new StatisticsView(tripsModel.getTrips());
+      menuComponent.setMenuItem(MenuItem.STATISTICS);
+      render(siteTripEvents, statisticsComponent);
+      break;
+  }
+};
+
+menuComponent.setMenuClickHandler(handleSiteMenuClick);
+menuComponent.setMenuItem(MenuItem.TABLE);
 
 const filterPresenter = new FilterPresenter(tripControlElement, filterModel, tripsModel);
 

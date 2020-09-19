@@ -1,4 +1,4 @@
-export const ROUT_POINT = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
+export const ROUT_POINT = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`, `check-in`, `sightseeing`, `restaurant`];
 export const CITIES = [`Yaroslavl`, `Saint-Petersburg`, `Moscow`, `Kazan`, `Krasnodar`, `Sochi`, `Adler`];
 export const DESCRIPTIONS = [`Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
   `Cras aliquet varius magna, non porta ligula feugiat eget.`,
@@ -22,24 +22,28 @@ export const MAX_MINUTES_DURATION = 59;
 export const SortType = {
   EVENT: `event`,
   PRICE: `price`,
-  TIME: `time`
+  TIME: `time`,
 };
 
 export const FilterType = {
   EVERYTHING: `everything`,
   FUTURE: `future`,
-  PAST: `past`
+  PAST: `past`,
 };
 
 export const UpdateType = {
   PATCH: `PATCH`,
   MINOR: `MINOR`,
-  MAJOR: `MAJOR`
+  MAJOR: `MAJOR`,
 };
 
 export const UserAction = {
   UPDATE_TRIP: `UPDATE_TRIP`,
   ADD_TRIP: `ADD_TRIP`,
-  DELETE_TRIP: `DELETE_TRIP`
+  DELETE_TRIP: `DELETE_TRIP`,
 };
 
+export const MenuItem = {
+  TABLE: `Table`,
+  STATISTICS: `Stats`,
+};
