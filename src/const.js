@@ -47,3 +47,5 @@ export const MenuItem = {
   TABLE: `Table`,
   STATISTICS: `Stats`,
 };
+
+export const TRANSPORTS = [`taxi`, `bus`, `ship`, `transport`, `drive`, `flight`, `train`];

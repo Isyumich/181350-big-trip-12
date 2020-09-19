@@ -1,5 +1,6 @@
 import moment from "moment";
 import SmartView from "./smart.js";
+import {TRANSPORTS} from "../const.js";
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
@@ -72,7 +73,7 @@ const renderMoneyChart = (moneyCtx, trips) => {
             display: false,
             drawBorder: false
           },
-          minBarLength: 50
+          minBarLength: 45
         }],
       },
       legend: {
@@ -89,12 +90,14 @@ const renderTransportChart = (transportCtx, trips) => {
   let transportCounts = new Map();
 
   for (let trip of trips) {
-    const count = 1;
-    const type = transportCounts.get(trip.typeRoutPoint);
-    if (!type) {
-      transportCounts.set(trip.typeRoutPoint, count);
-    } else {
-      transportCounts.set(trip.typeRoutPoint, count + 1);
+    if (TRANSPORTS.indexOf(trip.typeRoutPoint) !== -1) {
+      const count = 1;
+      const type = transportCounts.get(trip.typeRoutPoint);
+      if (!type) {
+        transportCounts.set(trip.typeRoutPoint, count);
+      } else {
+        transportCounts.set(trip.typeRoutPoint, count + 1);
+      }
     }
   }
 
@@ -154,7 +157,7 @@ const renderTransportChart = (transportCtx, trips) => {
             display: false,
             drawBorder: false
           },
-          minBarLength: 50
+          minBarLength: 45
         }],
       },
       legend: {
@@ -174,13 +177,13 @@ const renderTimeSpendChart = (timeSpendCtx, trips) => {
     let durationValue = 0;
     const duration = trip.dateTo - trip.dateFrom;
 
-    const target = destinations.get(trip.destination);
+    const target = destinations.get(trip.typeRoutPoint);
     if (!target) {
       durationValue = duration;
-      destinations.set(trip.destination, durationValue);
+      destinations.set(trip.typeRoutPoint, durationValue);
     } else {
       durationValue = target + duration;
-      destinations.set(trip.destination, durationValue);
+      destinations.set(trip.typeRoutPoint, durationValue);
     }
   }
 
@@ -240,7 +243,7 @@ const renderTimeSpendChart = (timeSpendCtx, trips) => {
             display: false,
             drawBorder: false
           },
-          minBarLength: 50
+          minBarLength: 45
         }],
       },
       legend: {

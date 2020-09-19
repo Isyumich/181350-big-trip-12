@@ -45,7 +45,7 @@ export default class TripBoard {
 
   destroy() {
     this._clearListTrips({resetSortType: true});
-
+    remove(this._daysListComponent);
     this._tripsModel.removeObserver(this._handleModelTrip);
     this._filterModel.removeObserver(this._handleModelTrip);
   }

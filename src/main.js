@@ -48,7 +48,7 @@ const handleSiteMenuClick = (menuItem) => {
       remove(statisticsComponent);
       statisticsComponent = new StatisticsView(tripsModel.getTrips());
       menuComponent.setMenuItem(MenuItem.STATISTICS);
-      render(siteTripEvents, statisticsComponent);
+      render(siteTripEvents, statisticsComponent, RenderPosition.AFTEREND);
       break;
   }
 };
